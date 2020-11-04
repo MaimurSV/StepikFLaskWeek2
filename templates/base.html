@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <!-- Добавил favicon, а то не очень красиво выглядит без иконки-->
+    <link rel="shortcut icon" href={{"" + url_for(
+    "static", filename = "images/favicon.png") + "" }} type="image/png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+<header class="container mt-3">
+    <!-- Меню с ссылками рисуется по разному в разных представлениях, поэтому здесь ветвление.
+        Изначально тут был блок, потом перечитал задание и сделал по заданию-->
+    {% if "departures" in request.path %}
+    <!--  На страничке с направлением все просто выделяем ссылку активной на направление, которое сейчас открыто пользователем.-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">{{ title }}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                {% for link, name in departures.items() %}
+                {% if link in request.path%}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/departures/{{link}}/">{{ name }}</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/departures/{{link}}/">{{ name }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+    {% elif "tours" in request.path %}
+    <!--  На страничке с туром выделяем ссылку активной на направление к которому имеет отношение этот тур-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">{{ title }}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                {% for link, name in departures.items() %}
+                {% if link==tours[tour_id]["departure"] %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/departures/{{link}}/">{{ name }}</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/departures/{{link}}/">{{ name }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+    {% else %}
+    <!-- У главной страницы ссылки активными не выделяем, нет смысла-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand active" href="/">{{ title }}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                {% for link, name in departures.items() %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/departures/{{link}}/">{{ name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+</header>
+<main class="container mt-3">
+    {% block content %} {% endblock %}
+</main>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+</html>

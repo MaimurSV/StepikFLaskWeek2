@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<!-- HERO -->
+<section class="jumbotron text-center mt-4" style="background: url({{"
+         \"" + url_for("static", filename = "images/splash.jpg") + "\"" }}); background-position: center center">
+<h1 class="display-4">Всякие туры</h1>
+<p class="lead">{{ subtitle }}</p>
+<p class="mt-5 w-50 mx-auto">{{ description }}</p>
+</section>
+<!-- CARDS -->
+<div class="row mt-5">
+    <!-- В качестве критерия сортировки были выбраны туры с отелями не менее 4-ых звезд.
+         При этом пришлось пойти на небульшую хитрость и создать список со словарем туров, в котором хранится id тура.
+         Так себе костыль, но работает:-(
+         Надеюсь в будущем найду более лаконичный способ решить подобную задачу-->
+    {% set tours_with_id = tours %}
+    {% for id, tour in tours_with_id.items() %}
+    <!-- В следующей строке пришлось присваивать значение неиспользуемой переменной, поскольку Jinja выдавала ошибку
+         на переменную tours_with_id, а если поменять фигурные скобки с процентом на простые фигурные скобки,
+         то получился принт слова None (который наверно возвращал метод update-->
+    {% set a = tours_with_id[id].update({"id": id}) %}
+    {% endfor %}
+    {% set sorted = tours_with_id.values() | selectattr("stars", ">=", "4") | list | sort(attribute="title") %}
+    {% for tour in sorted[:6] %}
+    <div class="col-4">
+        <div class="card mb-4">
+            <div class="embed-responsive embed-responsive-16by9">
+                <img class="card-img-top embed-responsive-item" src={{"" + tour["picture"] + ""}} alt="" />
+            </div>
+            <div class="card-body">
+                <h2 class="h5 card-title">{{ tour["title"] }}</h2>
+                <p class="card-text">{{ tour["description"] }}</p>
+                <a href="/tours/{{ tour["id"] }}" class="btn btn-sm btn-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
