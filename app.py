@@ -195,7 +195,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def view_index():
-    return render_template("index.html",  title=title, departures=departures, tours=tours, subtitle=subtitle)
+    return render_template("index.html",  title=title, departures=departures, tours=tours, subtitle=subtitle,
+                           description=description)
 
 
 @app.route("/departures/<departure>/")
@@ -208,4 +209,4 @@ def view_tour(tour_id):
     return render_template("tours.html", title=title, departures=departures, tours=tours, tour_id=tour_id)
 
 
-app.run("127.0.0.1", 8000)
+app.run("127.0.0.1", 8000, debug=True)
