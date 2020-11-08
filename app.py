@@ -209,4 +209,5 @@ def view_tour(tour_id):
     return render_template("tours.html", title=title, departures=departures, tours=tours, tour_id=tour_id)
 
 
-app.run("127.0.0.1", 8000, debug=True)
+if __name__ == '__main__':
+    app.run()
